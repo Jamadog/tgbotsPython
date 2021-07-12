@@ -47,32 +47,28 @@ def drawing_start(message):
 
 
 def drawing_saved(message):
-    if message.text.lower() == 'cancel':
-        bot.send_message(message.chat.id, 'Ok, the cancellation was successful!')
-        start_command(message)
-    else:
-        try:
-            file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            img_input = file_info.file_path
+    try:
+        file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        img_input = file_info.file_path
 
-            with open(img_input, 'wb') as new_file:
-                new_file.write(downloaded_file)
-                new_file.close()
-            bot.reply_to(message, 'Photo saved!\n'
+        with open(img_input, 'wb') as new_file:
+            new_file.write(downloaded_file)
+            new_file.close()
+        bot.reply_to(message, 'Photo saved!\n'
                                   'Waiting for...')
 
-            img_output = draw_image.draw_img(img_input)
-            img_output.save(file_info.file_path)
-            way_img_output = file_info.file_path
-            photo = open(way_img_output, 'rb')
-            bot.send_photo(message.chat.id, photo)
-            photo.close()
-            path = os.path.join(os.path.abspath(os.path.dirname(__file__)), way_img_output)
-            os.remove(path)
+        img_output = draw_image.draw_img(img_input)
+        img_output.save(file_info.file_path)
+        way_img_output = file_info.file_path
+        photo = open(way_img_output, 'rb')
+        bot.send_photo(message.chat.id, photo)
+        photo.close()
+        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), way_img_output)
+        os.remove(path)
 
-        except Exception as Ex:
-            print(Ex)
+    except Exception as Ex:
+        print(Ex)
 
 
-bot.polling(none_stop=True)
+bot.polling()
