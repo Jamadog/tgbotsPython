@@ -51,7 +51,8 @@ def drawing_saved(message):
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         img_input = file_info.file_path
-
+        print(img_input)
+        print(file_info.file_path)
         with open(img_input, 'wb') as new_file:
             new_file.write(downloaded_file)
             new_file.close()
