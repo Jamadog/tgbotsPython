@@ -26,14 +26,17 @@ def qr_create(message):
         bot.send_message(message.chat.id, 'Ok, the cancellation was successful!')
         start_command(message)
     else:
-        image = qrcode.make(message.text.lower())
-        name = 'qr.png'
-        image.save(name)
-        qr = open(name, 'rb')
-        bot.send_photo(message.chat.id, qr)
-        qr.close()
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), name)
-        os.remove(path)
+        try:
+            image = qrcode.make(message.text.lower())
+            name = 'qr.png'
+            image.save(name)
+            qr = open(name, 'rb')
+            bot.send_photo(message.chat.id, qr)
+            qr.close()
+            path = os.path.join(os.path.abspath(os.path.dirname(__file__)), name)
+            os.remove(path)
+        except FileNotFoundError:
+            pass
 
 
 @bot.message_handler(commands=['drawing'])
@@ -72,4 +75,4 @@ def drawing_saved(message):
         print(Ex)
 
 
-bot.polling()
+bot.polling(True)
